@@ -1,6 +1,6 @@
 ## 컴파일
-- 서버 프로그램 컴파일: gcc echo-server.c -o echo-server -pthread
-- 클라이언트 프로그램 컴파일: gcc echo-client.c -o echo-client -pthread
+- 서버 프로그램 컴파일: `gcc echo-server.c -o echo-server -pthread`
+- 클라이언트 프로그램 컴파일: `gcc echo-client.c -o echo-client -pthread`
 
 ## 동시성과 동기화 구현
 - 동시성(concurrency) → multi-threading으로 구현
@@ -26,14 +26,14 @@
         }
         ```
         
-    2. handle_clnt: 이미 접속된 클라이언트들과 실제로 메시지를 주고받음
-2. 공유 자원 보호를 위한 잠금 장치(mutex)
+    2. `handle_clnt`: 이미 접속된 클라이언트들과 실제로 메시지를 주고받음
+2. 공유 자원 보호를 위한 잠금 장치(`mutex`)
     
-    여러 클라이언트 스레드가 동시에 접속자 목록(g_client_socks)을 수정하거나, 서버 콘솔에 메시지를 출력하려고 하면 데이터가 꼬일 수 있음 → pthread_mutex_t 사용
+    여러 클라이언트 스레드가 동시에 접속자 목록(`g_client_socks`)을 수정하거나, 서버 콘솔에 메시지를 출력하려고 하면 데이터가 꼬일 수 있음 → `pthread_mutex_t` 사용
     
-    1. 공유 자원에 접근하기 전, 반드시 pthread_mutex_lock(&g_mutex);을 호출해 lock
+    1. 공유 자원에 접근하기 전, 반드시 `pthread_mutex_lock(&g_mutex);`을 호출해 lock
     2. lock 상태라면 다른 thread는 대기
-    3. 공유 자원을 다 사용하면 pthread_mutex_unlock(&g_mutex);으로 문을 열어 다른 스레드가 사용할 수 있도록 함
+    3. 공유 자원을 다 사용하면 `pthread_mutex_unlock(&g_mutex);`으로 문을 열어 다른 스레드가 사용할 수 있도록 함
     
     ```c
     // handle_clnt 함수 내부: 메시지 전송 로직
@@ -60,12 +60,12 @@
 - 송신 thread와 수신 thread의 분리
     - thread가 하나라면?
         
-        키보드 입력을 기다리는 fgets() 함수나 서버 메시지를 기다리는 read() 함수에서 프로그램이 멈출 것(blocking)
+        키보드 입력을 기다리는 `fgets()` 함수나 서버 메시지를 기다리는 `read()` 함수에서 프로그램이 멈출 것(blocking)
         
         → 내가 메시지를 입력하는 동안 서버가 보낸 메시지를 볼 수 없고, 서버 메시지를 기다리는 동안 내가 메시지를 입력할 수 없을 것 
         
-    1. send_msg: 키보드 입력을 받아 서버로 메시지를 보내는 일 전담
-    2. recv_msg: 서버로부터 메시지가 오는지 항상 귀 기울이고, 메시지가 오면 화면에 출력하는 일만 전담
+    1. `send_msg`: 키보드 입력(`fgets`)을 받아 서버로 메시지를 보내는(`write`) 일 전담
+    2. `recv_msg`: 서버로부터 메시지가 오는지 항상 `read`, 메시지가 오면 화면에 출력(`fputs`)하는 일만 전담
     
     ```c
     // main 함수 내부
