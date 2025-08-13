@@ -1,3 +1,6 @@
+## demo 
+![Image](https://github.com/user-attachments/assets/981a511a-0c80-425f-8c56-d5dc9c35239b)
+
 ## 컴파일
 - 서버 프로그램 컴파일: `gcc echo-server.c -o echo-server -pthread`
 - 클라이언트 프로그램 컴파일: `gcc echo-client.c -o echo-client -pthread`
